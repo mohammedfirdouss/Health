@@ -1,7 +1,10 @@
 
 🧬 Skin Cancer Mutation RAG System
+
 📘 Project Overview
+
 This project implements a Retrieval-Augmented Generation (RAG) system designed to act as an intelligent assistant for clinical and molecular oncology. It answers questions specifically related to skin cancer protein mutations (e.g., BRAF, NRAS, TP53).
+
 The system combines:
     1. Knowledge Retrieval: Fetches relevant scientific instructions from the "Mol-Instructions" dataset.
     2. External Knowledge Base: Real-time integration with the UniProt API to validate protein function and structure.
