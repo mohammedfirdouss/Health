@@ -1,8 +1,6 @@
 
 🧬 Skin Cancer Mutation RAG System
 
-Group Assignment Submission: AI for Molecular Science
-
 📋 Executive Synopsis & Alignment
 
 The Assignment Goal: The objective was to engineer a creative AI solution utilizing Large Language Models (LLMs), Retrieval-Augmented Generation (RAG) pipelines, HuggingFace biomolecular datasets, and external biological knowledge bases (like UniProt).
