@@ -1,10 +1,5 @@
 
-🧬 Skin Cancer Mutation RAG System
-
-📋  Brief Outline 
-
-The team was tasked to use the learning outcomes from Applied Ai, Production AI, LLM Engineering from AISOC 2025 to develop novel impactful solutions using LLMs, RAG pipelines, biomolecular data from HuggingFace, and biomolecular knowledge bases (such as UniProt, OncoKB, etc).
-
+                                                         🧬 CANCER MUTATION RAG SYSTEM
 The Solution: By narrowing the scope to a high-impact local domain eg the widespread use and abuse of skin bleaching creams within the African context and the attendent high incidence of pathology relating to skin diseases, for  Clinical Oncology We were able to engineer a specialized RAG system that allows clinicians and researchers to query complex information regarding skin cancer mutations (e.g., BRAF, NRAS, TP53).
 
 Objective-to-Solution Matrix:
@@ -15,9 +10,11 @@ HuggingFace Data	Ingested, filtered, and indexed the "Mol-Instructions" dataset 
 Knowledge Bases	Built a real-time UniProt API Bridge to fetch ground-truth protein metadata, reducing hallucination.
 Production AI Track	Utilized 4-bit quantization (bitsandbytes) and memory-efficient caching to ensure the tool runs on consumer hardware/Free-tier Colab.
 
-📘 Project Overview
 
-The overall aim of the Project is to develop a useful tool for molecular dermatological oncology that would also be of high imapct within the african health space. Distinctly different from an off the shelf general-purpose chatbot, our solution is primed on concurrent scientific literature and biological facts. 
+📘OVERVIEW|DATA ORIGIN|PREPROCESSING
+
+The overall aim of the Project is to develop a useful tool for molecular dermatological oncology that would also be of high imapct within the african health space.
+Distinctly different from an off the shelf general-purpose chatbot, our solution is primed on concurrent scientific literature and biological facts. 
 
 The tool is specifically focused on skin cancer protein mutations by combining three distinct layers of applied Data:
 
@@ -25,9 +22,7 @@ The tool is specifically focused on skin cancer protein mutations by combining t
     2. Fact-Checking (API): Real-time integration with the UniProt Knowledgebase to validate protein function, structure, and accession IDs.
     3. Generative Synthesis (LLM): Uses a quantized Llama-3 model to synthesize the retrieved context into coherent clinical answers.
     
-🛠 Tech Stack & Dependencies
-
-This solution utilizes a Python-based micro-architecture suitable for the "LLM Engineering" and "Production AI" tracks.
+🛠TECH STACKS
     • Language: Python 3.10+
     • LLM Engine: unsloth/Llama-3.2-1B-Instruct (4-bit Quantized via bitsandbytes & accelerate)
     • Embeddings: sentence-transformers/all-MiniLM-L6-v2
@@ -35,7 +30,7 @@ This solution utilizes a Python-based micro-architecture suitable for the "LLM E
     • Data Orchestration: HuggingFace Datasets, UniProt REST API
     • Interface: Gradio
     
-📦 Installation & Setup
+📦 iNSTALLATION SETUP
 
 Deploying the Solution requires a Python environment.
 
@@ -50,16 +45,14 @@ pip install -q bitsandbytes accelerate
 # 3. Install Interface and Networking tools
 pip install -q gradio requests
   
-📂 System Architecture & API Reference
+📂SYSTEM ACHITECTURE AND API REFERENCE
 
-The application uses five modular classes, ensuring a clear delineation between data ingestion, retrieval, and generation.
-
-1. Data Ingestion: MolInstructionsFilter
+1. Data Ingestion: MolInstructions
     • Role: The Gatekeeper.
     • Function: Manages the ingestion of raw scientific text. It restricts the data ingestion/ input strictly within skin-cancer-related terms (e.g., 'melanoma', 'V600E').
     • Key Method: download_and_filter(max_samples=5000) — Streams the massive "zjunlp/Mol-Instructions" dataset and saves a local optimized JSON (cancer_filtered.json).
 
-2. Knowledge Base Bridge: UniProtCache
+2. Knowledge Base Bridge: UniProt
     • Role: The Fact-Checker.
     • Function: Connects to the UniProt Knowledgebase to provide "ground truth" data. This is critical for preventing LLM hallucinations regarding gene names or biological functions.
     • Key Method: fetch_protein_info(gene_name) — Queries the UniProt REST API to extract Protein Name, Function, and Sequence Length.
