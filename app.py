@@ -1,14 +1,10 @@
 """
 Streamlit Web Application for the Skin Cancer Mutation AI Assistant.
-
-This application provides a user-friendly chat interface to interact with the RAG
-pipeline defined in `rag_engine.py`. It allows users to ask questions about
-skin cancer mutations and receive answers grounded in scientific data.
 """
 
 import streamlit as st
 import logging
-from rag_engine import create_rag_engine
+from src.main import create_rag_engine
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +16,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# --- Custom CSS for a clean, professional look ---
+# --- Custom CSS ---
 st.markdown("""
 <style>
     .stApp {
@@ -33,20 +29,73 @@ st.markdown("""
         padding: 12px;
         box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .st-emotion-cache-18ni7ap {
-        background-color: #ffffff;
-    }
-    .stButton>button {
-        border-radius: 8px;
-        border: 1px solid #007bff;
-        color: #007bff;
-    }
-    .stButton>button:hover {
-        border-color: #0056b3;
-        color: #0056b3;
-    }
 </style>
 """, unsafe_allow_html=True)
+
+# --- Sidebar ---
+with st.sidebar:
+    st.image("https://img.icons8.com/fluency/96/dna-helix.png", width=80)
+    st.title("Onco-RAG Assistant")
+    st.markdown("---")
+    st.markdown("""
+    **System Status:**
+    - 🟢 LLM Engine: **Llama-3.2-1B**
+    - 🟢 Knowledge Base: **Mol-Instructions**
+    - 🟢 Fact-Checking: **UniProt API**
+    """)
+    st.markdown("---")
+    st.info("This tool is designed for clinical research and educational purposes.")
+
+# --- Main Interface ---
+st.title("🧬 Skin Cancer Mutation Analysis System")
+st.markdown("""
+Welcome to the **RAG-powered Clinical Assistant**. 
+Ask questions about skin cancer mutations (e.g., *BRAF V600E*, *NRAS*, *TP53*) to get evidence-based answers.
+""")
+
+# Initialize Session State
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+if "rag_engine" not in st.session_state:
+    with st.spinner("Initializing AI Engine... (This may take a minute)"):
+        try:
+            st.session_state.rag_engine = create_rag_engine()
+            st.success("System Ready!")
+        except Exception as e:
+            st.error(f"System Initialization Failed: {e}")
+
+# Display Chat History
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+# Chat Input
+if prompt := st.chat_input("Ask a question about a mutation (e.g., 'What is the clinical significance of BRAF V600E?')..."):
+    # Add user message to history
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    # Generate Response
+    with st.chat_message("assistant"):
+        with st.spinner("Analyzing scientific literature and protein databases..."):
+            try:
+                response_obj = st.session_state.rag_engine.query(prompt)
+                response_text = response_obj["response"]
+                
+                st.markdown(response_text)
+                
+                # Add assistant response to history
+                st.session_state.messages.append({"role": "assistant", "content": response_text})
+                
+                # Show sources in an expander
+                with st.expander("📚 View Scientific Sources"):
+                    for node in response_obj["source_nodes"]:
+                        st.markdown(f"- {node.get_text()[:200]}...")
+                        
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
 
 
 # --- Initialization and Caching ---

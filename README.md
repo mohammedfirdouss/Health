@@ -59,18 +59,19 @@ By narrowing the scope to a high-impact local domain—the widespread use and ab
 
 ## 📂 System Architecture & API Reference
 
-### 1. Data Ingestion & RAG Engine (`rag_engine.py`)
-- **Framework**: Built on **LlamaIndex** for robust document indexing and retrieval.
-- **Vector Store**: Uses **ChromaDB** for persistent storage of embeddings.
-- **Key Method**: `create_rag_engine()` — Initializes the LLM, embedding model, and vector index.
+### 1. Core Logic (`src/core/`)
+- **`engine.py`**: Contains the `UniProtEnrichedQueryEngine` class that orchestrates retrieval and generation.
+- **`models.py`**: Manages the initialization of the quantized LLM and embedding models.
+- **`index.py`**: Handles the creation and loading of the ChromaDB vector index.
+- **`config.py`**: Centralized configuration loader.
 
-### 2. Knowledge Base Bridge (`uniprot_utils.py`)
-- **Role**: The Fact-Checker
-- **Function**: Connects to the UniProt Knowledgebase to provide "ground truth" data.
-- **Key Method**: `fetch_protein_info(gene_name)` — Queries the UniProt REST API to extract Protein Name, Function, and Sequence Length.
-- **Optimization**: Implements local caching to prevent redundant API calls.
+### 2. Data Management (`src/data/`)
+- **`loader.py`**: Responsible for downloading, filtering, and caching the Mol-Instructions dataset.
 
-### 3. User Interface (`app.py`)
+### 3. Utilities (`src/utils/`)
+- **`uniprot.py`**: The bridge to the UniProt API for real-time protein data fetching.
+
+### 4. User Interface (`app.py`)
 - **Framework**: **Streamlit**
 - **Function**: Provides a chat-based interface for clinicians to interact with the model.
 - **Features**: Maintains chat history and renders markdown responses.
